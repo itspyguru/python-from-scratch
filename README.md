@@ -1,13 +1,10 @@
-# A Redis-style cache in Python
+# Python from scratch
 
-A small in-memory cache built from an empty file, line by line, for the itsPyguru video.
-No dependencies: Python 3 standard library only.
+Backend systems built from an empty file in Python, one folder per [itsPyguru](https://github.com/itspyguru) video.
 
-- `cache.py`: `SimpleCache` (set, get, delete, expire, clear, cleanup, background cleaner, stampede-safe `get_or_load`) and `LRUCache`.
-- `db.py`: a fake database that counts queries and sleeps 2 s.
-- `demo_*.py`: one runnable demo per idea. Example: `python demo_stampede.py`.
+| Folder | What it builds |
+|---|---|
+| [redis-style-cache](redis-style-cache) | In-memory cache: TTLs, a cleaner thread, a stampede fix, LRU eviction |
+| [load-balancer](load-balancer) | Round robin across 3 FastAPI backends, health checks, a kill-a-server test |
 
-Measured here with 1000 threads asking for one key: check-then-load made 1000 queries, `get_or_load` made 1.
-
-This is a teaching build, not a Redis replacement. It is one process only, it scans every key while
-cleaning, and `key_locks` never shrinks. For anything shared between processes, use Redis.
+These are teaching builds, not production replacements.
