@@ -10,6 +10,8 @@ class SimpleCache:
         self.store = {}
         self.lock = threading.RLock()
         self.key_locks = {}
+        self.cleaner = None
+        self.stop_event = threading.Event()
 
     def _expired(self, entry):
         at = entry["expires_at"]
@@ -60,13 +62,23 @@ class SimpleCache:
             return len(dead)
 
     def start_cleaner(self, every=1.0):
+        if self.cleaner is not None:
+            return
+
         def loop():
-            while True:
-                time.sleep(every)
+            while not self.stop_event.wait(every):
                 self.cleanup()
 
-        thread = threading.Thread(target=loop, daemon=True)
-        thread.start()
+        self.cleaner = threading.Thread(target=loop, daemon=True)
+        self.cleaner.start()
+
+    def stop_cleaner(self):
+        if self.cleaner is None:
+            return
+        self.stop_event.set()
+        self.cleaner.join()
+        self.cleaner = None
+        self.stop_event.clear()
 
     def get_or_load(self, key, loader, ttl=None):
         value = self.get(key, MISSING)
@@ -87,6 +99,8 @@ class SimpleCache:
 
 class LRUCache(SimpleCache):
     def __init__(self, max_keys):
+        if max_keys < 1:
+            raise ValueError("max_keys must be at least 1")
         super().__init__()
         self.store = OrderedDict()
         self.max_keys = max_keys
