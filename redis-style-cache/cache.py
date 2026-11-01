@@ -12,15 +12,15 @@ class SimpleCache:
         self.key_locks = {}
 
     def _expired(self, entry):
-        expires_at = entry["expires_at"]
-        return expires_at is not None and time.monotonic() >= expires_at
+        at = entry["expires_at"]
+        return at is not None and time.monotonic() >= at
 
     def set(self, key, value, ttl=None):
-        expires_at = None
+        at = None
         if ttl is not None:
-            expires_at = time.monotonic() + ttl
+            at = time.monotonic() + ttl
         with self.lock:
-            self.store[key] = {"value": value, "expires_at": expires_at}
+            self.store[key] = {"value": value, "expires_at": at}
 
     def get(self, key, default=None):
         with self.lock:
@@ -51,7 +51,10 @@ class SimpleCache:
 
     def cleanup(self):
         with self.lock:
-            dead = [k for k, e in self.store.items() if self._expired(e)]
+            dead = [
+                k for k, e in self.store.items()
+                if self._expired(e)
+            ]
             for key in dead:
                 del self.store[key]
             return len(dead)
@@ -70,7 +73,9 @@ class SimpleCache:
         if value is not MISSING:
             return value
         with self.lock:
-            key_lock = self.key_locks.setdefault(key, threading.Lock())
+            key_lock = self.key_locks.setdefault(
+                key, threading.Lock()
+            )
         with key_lock:
             value = self.get(key, MISSING)
             if value is not MISSING:

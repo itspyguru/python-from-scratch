@@ -9,8 +9,8 @@ def naive_expire(cache, key, ttl):
     cache.store[key]["expires_at"] = time.monotonic() + ttl
     return True
 
-
-for name, expire in [("naive", naive_expire), ("ours", SimpleCache.expire)]:
+versions = [("naive", naive_expire), ("ours", SimpleCache.expire)]
+for name, expire in versions:
     cache = SimpleCache()
     cache.set("a", "old value", ttl=1)
     time.sleep(1.1)
