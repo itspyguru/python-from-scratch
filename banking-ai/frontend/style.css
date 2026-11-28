@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+html, body, p, h1, h2, h3, label, input, textarea, button, li, td, th { font-family: 'Poppins', sans-serif; }
+.stApp { background: #f4f6fb; }
+[data-testid="stSidebar"] { background: #10162f; }
+[data-testid="stSidebar"] * { color: #e8ebf7 !important; }
+
+.bank-card {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 55%, #db2777 100%);
+    border-radius: 20px; padding: 28px 32px; color: white;
+    box-shadow: 0 12px 30px rgba(79, 70, 229, 0.35);
+}
+.bank-card .label { font-size: 14px; opacity: 0.8; }
+.bank-card .balance { font-size: 40px; font-weight: 700; margin: 4px 0 18px; }
+.bank-card .number { font-size: 18px; letter-spacing: 3px; }
+.bank-card .name { font-size: 15px; margin-top: 6px; opacity: 0.9; }
+
+.stat-card {
+    background: white; border-radius: 16px; padding: 20px 24px;
+    box-shadow: 0 4px 14px rgba(16, 22, 47, 0.06); height: 100%;
+}
+.stat-card .label { color: #6b7280; font-size: 14px; }
+.stat-card .value { font-size: 28px; font-weight: 600; margin-top: 6px; }
+.green { color: #059669; }
+.red { color: #dc2626; }
+[data-testid="stSidebar"] button { background: transparent; border: 1px solid #4f46e5; }
